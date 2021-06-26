@@ -1,7 +1,9 @@
 #! /usr/bin/python
 
+import datetime
 import getopt
 import platform
+import re
 import sys
 import logging
 
@@ -28,8 +30,36 @@ def print_version():
     print("    python: %s" % sys.version.split('\n')[0])
     sys.exit()
 
-def analyze(file):
-    logger.debug("analyze %s" % (file))
+def parse_logcat(line):
+    print(line)
+    m = re.match('([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}) ([0-9]+)-([0-9]+) ([A-Z])/([a-zA-Z-]+):', line)
+    if m:
+        date_time = m.group(1)
+        pid = int(m.group(2))
+        tid = int(m.group(3))
+        level = m.group(4)
+        tag = m.group(5)
+        print("date_time:%s" % (date_time))
+        
+        dt = datetime.datetime.strptime(date_time, '%Y-%m-%d %H:%M:%S.%f')
+        print("dt:%s ts:%f" % (dt, float(dt.strftime('%s.%f'))))
+        # print("dt:%s ts:%f" % (dt, dt.timestamp))
+        
+        print("pid:%d tid:%d" % (pid, tid))
+        print("level:%s tag:%s" % (level, tag))
+    else:
+        # TODO: append to previous line
+        pass
+
+def analyze(filepath):
+    logger.debug("analyze %s" % (filepath))
+    with open(filepath, 'r') as f:
+        # print(f.read())
+        while True:
+            l = f.readline()
+            if not l:
+                break
+            parse_logcat(l)
 
 def main():
     try:
