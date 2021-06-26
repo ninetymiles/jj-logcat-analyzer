@@ -11,11 +11,14 @@ _options = [
     'version',
 ]
 _short_options = 'hV'
-_help = """Usage: {} [OPTION]... [URL]...
-"""
 
-logger = logging.getLogger("jj")
+logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
+
+def help():
+    print("  Usage: %s logcat.txt" % sys.argv[0])
 
 def main():
     try:
@@ -24,17 +27,17 @@ def main():
         logger.warn("err - %s " % (e))
 
     if not opts and not args:
-        print(_help)
+        help()
     else:
         conf = {}
         for opt, arg in opts:
             if opt in ('-h', '--help'):
-                print(_help)
+                help()
             elif opt in ('-V', '--version'):
-                logger.info("jj:")
-                logger.info("    version: %s", __version__)
-                logger.info("    platform: %s", platform.platform())
-                logger.info("    python: %s", sys.version.split('\n')[0])
+                print("JJ logcat analyzer:")
+                print("  version: %s" % __version__)
+                print("  platform: %s" % platform.platform())
+                print("  python: %s" % sys.version.split('\n')[0])
 
 if __name__ == '__main__':
     main()
