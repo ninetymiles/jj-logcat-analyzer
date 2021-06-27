@@ -7,6 +7,9 @@ import re
 import sys
 import logging
 
+import Analyzer
+import AnalyzerAPI
+
 __version__ = '0.1.0'
 _options = [
     'help',
